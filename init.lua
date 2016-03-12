@@ -22,7 +22,6 @@ minetest.register_tool("superpick:pick", {
 
 minetest.register_privilege("superpick", {description = "Ability to wield the mighty admin pickaxe!"})
 
-local resisters = {}
 local function kill_node(pos, node, puncher)
 	if puncher:get_wielded_item():get_name() == "superpick:pick" then
 		if not minetest.check_player_privs(
