@@ -1,3 +1,27 @@
+minetest.register_craftitem("superpick:setter", {
+	description = "Super Setter",
+	inventory_image = "default_tool_steelpick.png^default_obsidian_shard.png",
+	on_use = function(itemstack, user, pointed_thing)
+		if not minetest.check_player_privs(user, "superpick") then
+			return {name = "default:pick_steel"}
+		end
+
+		local alt = false
+		if user:get_player_control().sneak then
+			alt = true
+		end
+
+		local p = pointed_thing.under
+		local n = minetest.get_node(p)
+		if not minetest.registered_nodes[n.name] then
+			minetest.remove_node(p)
+			if not alt then
+				nodeupdate(p)
+			end
+		end
+	end,
+})
+
 minetest.register_tool("superpick:pick", {
 	description = "Super Pickaxe",
 	inventory_image = "default_tool_mesepick.png^default_obsidian_shard.png",
@@ -73,5 +97,3 @@ minetest.override_item(node, {
 end
 		end)
 	end)
-
-print("hi")  -- This doesn't print.
