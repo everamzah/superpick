@@ -13,12 +13,12 @@ minetest.register_craftitem("superpick:setter", {
 
 		local p = pointed_thing.under
 		local n = minetest.get_node(p)
-		if not minetest.registered_nodes[n.name] then
+		--if not minetest.registered_nodes[n.name] then
 			minetest.remove_node(p)
 			if not alt then
 				nodeupdate(p)
 			end
-		end
+		--end
 	end,
 })
 
