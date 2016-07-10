@@ -1,6 +1,7 @@
 minetest.register_craftitem("superpick:setter", {
 	description = "Super Setter",
 	inventory_image = "default_tool_steelpick.png^default_obsidian_shard.png",
+	groups = {not_in_creative_inventory = 1},
 	on_use = function(itemstack, user, pointed_thing)
 		if not minetest.check_player_privs(user, "superpick") then
 			return {name = "default:pick_steel"}
