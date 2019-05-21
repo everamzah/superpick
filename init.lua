@@ -17,7 +17,7 @@ minetest.register_craftitem("superpick:setter", {
 		--if not minetest.registered_nodes[n.name] then
 			minetest.remove_node(p)
 			if not alt then
-				nodeupdate(p)
+				minetest.check_for_falling(p)
 			end
 		--end
 	end,
@@ -69,7 +69,7 @@ local function kill_node(pos, node, puncher)
 			if add_node then minetest.add_item(pos, add_node) end
 		end
 		minetest.remove_node(pos)
-		nodeupdate(pos)
+		minetest.check_for_falling(pos)
 	end
 end
 
