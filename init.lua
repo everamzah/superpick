@@ -2,7 +2,7 @@ minetest.register_craftitem("superpick:setter", {
 	description = "Super Setter",
 	inventory_image = "default_tool_steelpick.png^default_obsidian_shard.png",
 	groups = {not_in_creative_inventory = 1},
-	on_use = function(itemstack, user, pointed_thing)
+	on_use = function(_, user, pointed_thing)
 		if not minetest.check_player_privs(user, "superpick") then
 			return {name = "default:pick_steel"}
 		end
@@ -47,7 +47,7 @@ minetest.register_tool("superpick:pick", {
 
 minetest.register_privilege("superpick", {description = "Ability to wield the mighty admin pickaxe!"})
 
-local function kill_node(pos, node, puncher)
+local function kill_node(pos, _, puncher)
 	if puncher:get_wielded_item():get_name() == "superpick:pick" then
 		if not minetest.check_player_privs(
 				puncher:get_player_name(), {superpick = true}) then
@@ -73,28 +73,20 @@ local function kill_node(pos, node, puncher)
 	end
 end
 
-minetest.register_on_punchnode(function(pos, node, puncher)
-	kill_node(pos, node, puncher)
-end)
-
-	minetest.after(0.01, function ()
-		minetest.after(0.01, function ()
-for node in pairs(minetest.registered_nodes) do
-	local def = minetest.registered_nodes[node]
-	for i in pairs(def) do
-		if i == "on_punch" then
-
-local rem = def.on_punch
-local function new_on_punch(pos, node, puncher, pointed_thing)
-	kill_node(pos, node, puncher)
-	return rem(pos, node, puncher, pointed_thing)
-end
-
-minetest.override_item(node, {
-	on_punch = new_on_punch
-})
+minetest.register_on_mods_loaded(function()
+	for node in pairs(minetest.registered_nodes) do
+		local def = minetest.registered_nodes[node]
+		for i in pairs(def) do
+			if i == "on_punch" then
+				local rem = def.on_punch
+				local function new_on_punch(pos, new_node, puncher, pointed_thing)
+					kill_node(pos, new_node, puncher)
+					return rem(pos, new_node, puncher, pointed_thing)
+				end
+				minetest.override_item(node, {
+					on_punch = new_on_punch
+				})
+			end
 		end
 	end
-end
-		end)
-	end)
+end)
